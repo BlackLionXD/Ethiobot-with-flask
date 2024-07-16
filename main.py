@@ -24,11 +24,15 @@ def handle_prompt():
     # Create conversation history string
     history = "\n".join(conversation_history)
 
+    if input_text.lower() in ["exit", "quit"]:
+        print("Exiting chat.")
+        return "Exiting chat."
+
     # Tokenize the input text and history
-    inputs = tokenizer.encode_plus(history, input_text, return_tensors="pt")
+    inputs = tokenizer.encode_plus(history + "\n" + input_text, return_tensors="pt", truncation=True, max_length=1024)
 
     # Generate the response from the model
-    outputs = model.generate(**inputs, max_length= 60)  # max_length will cause the model to crash at some point as history grows
+    outputs = model.generate(**inputs, max_length=1024, num_return_sequences=1, pad_token_id=tokenizer.eos_token_id) # max_length will cause the model to crash at some point as history grows
 
     # Decode the response
     response = tokenizer.decode(outputs[0], skip_special_tokens=True).strip()
