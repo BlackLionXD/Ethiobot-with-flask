@@ -13,7 +13,7 @@ conversation_history = []
 
 @app.route('/', methods=['GET'])
 def home():
-        return render_template('index.html')
+    return render_template('index.html')
 
 @app.route('/chatbot', methods=['POST'])
 def handle_prompt():
